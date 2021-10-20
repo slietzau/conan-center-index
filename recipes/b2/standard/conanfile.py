@@ -12,42 +12,42 @@ class B2Conan(ConanFile):
     settings = "os", "arch"
     url = "https://github.com/conan-io/conan-center-index"
 
-    '''
+    """
     * use_cxx_env: False, True
 
     Indicates if the build will use the CXX and
     CXXFLAGS environment variables. The common use is to add additional flags
     for building on specific platforms or for additional optimization options.
 
-    * toolset: 'auto', 'cxx', 'cross-cxx',
-    'acc', 'borland', 'clang', 'como', 'gcc-nocygwin', 'gcc',
-    'intel-darwin', 'intel-linux', 'intel-win32', 'kcc', 'kylix',
-    'mingw', 'mipspro', 'pathscale', 'pgi', 'qcc', 'sun', 'sunpro',
-    'tru64cxx', 'vacpp', 'vc12', 'vc14', 'vc141', 'vc142'
+    * toolset: "auto", "cxx", "cross-cxx",
+        "acc", "borland", "clang", "como", "gcc-nocygwin", "gcc",
+        "intel-darwin", "intel-linux", "intel-win32", "kcc", "kylix",
+        "mingw", "mipspro", "pathscale", "pgi", "qcc", "sun", "sunpro",
+        "tru64cxx", "vacpp", "vc12", "vc14", "vc141", "vc142"
 
-    Specifies the toolset to use for building. The default of 'auto' detects
-    a usable compiler for building and should be preferred. The 'cxx' toolset
-    uses the 'CXX' and 'CXXFLAGS' solely for building. Using the 'cxx'
-    toolset will also turn on the 'use_cxx_env' option. And the 'cross-cxx'
-    toolset uses the 'BUILD_CXX' and 'BUILD_CXXFLAGS' vars. This frees the
-    'CXX' and 'CXXFLAGS' variables for use in subprocesses.
-    '''
+    Specifies the toolset to use for building. The default of "auto" detects
+    a usable compiler for building and should be preferred. The "cxx" toolset
+    uses the "CXX" and "CXXFLAGS" solely for building. Using the "cxx"
+    toolset will also turn on the "use_cxx_env" option. And the "cross-cxx"
+    toolset uses the "BUILD_CXX" and "BUILD_CXXFLAGS" vars. This frees the
+    "CXX" and "CXXFLAGS" variables for use in subprocesses.
+    """
     options = {
-        'use_cxx_env': [False, True],
-        'toolset': [
-            'auto', 'cxx', 'cross-cxx',
-            'acc', 'borland', 'clang', 'como', 'gcc-nocygwin', 'gcc',
-            'intel-darwin', 'intel-linux', 'intel-win32', 'kcc', 'kylix',
-            'mingw', 'mipspro', 'pathscale', 'pgi', 'qcc', 'sun', 'sunpro',
-            'tru64cxx', 'vacpp', 'vc12', 'vc14', 'vc141', 'vc142'],
+        "use_cxx_env": [False, True],
+        "toolset": [
+            "auto", "cxx", "cross-cxx",
+            "acc", "borland", "clang", "como", "gcc-nocygwin", "gcc",
+            "intel-darwin", "intel-linux", "intel-win32", "kcc", "kylix",
+            "mingw", "mipspro", "pathscale", "pgi", "qcc", "sun", "sunpro",
+            "tru64cxx", "vacpp", "vc12", "vc14", "vc141", "vc142"],
     }
     default_options = {
-        'use_cxx_env': False,
-        'toolset': 'auto',
+        "use_cxx_env": False,
+        "toolset": "auto",
     }
 
     def configure(self):
-        if (self.options.toolset == 'cxx' or self.options.toolset == 'cross-cxx') and not self.options.use_cxx_env:
+        if (self.options.toolset == "cxx" or self.options.toolset == "cross-cxx") and not self.options.use_cxx_env:
             raise ConanInvalidConfiguration(
                 "Option toolset 'cxx' and 'cross-cxx' requires 'use_cxx_env=True'")
 
@@ -65,7 +65,7 @@ class B2Conan(ConanFile):
         with tools.chdir(engine_dir):
             with tools.environment_append({"VSCMD_START_DIR": os.curdir}):
                 command = "build" if tools.os_info.is_windows else "./build.sh"
-                if self.options.toolset != 'auto':
+                if self.options.toolset != "auto":
                     command += " " + str(self.options.toolset)
                 if self.options.use_cxx_env:
                     # Allow use of CXX env vars.
@@ -81,7 +81,7 @@ class B2Conan(ConanFile):
                 "--prefix=../output",
                 "--abbreviate-paths",
             ]
-            if self.options.toolset != 'auto':
+            if self.options.toolset != "auto":
                 args.append("toolset={}".format(self.options.toolset))
             args.append("install")
             self.run(" ".join(args))
